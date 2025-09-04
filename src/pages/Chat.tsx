@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Send, 
   Mic, 
@@ -16,7 +18,9 @@ import {
   Bot,
   BarChart3,
   FileText,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Menu,
+  Settings
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
@@ -43,18 +47,63 @@ interface Message {
 }
 
 const Chat = () => {
+  const isMobile = useIsMobile();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       type: 'ai',
-      content: 'Hello! I\'m FloatChat, your AI assistant for ocean data exploration. Ask me about ocean temperatures, salinity, float trajectories, or any oceanographic data you\'re curious about.',
+      content: 'Hello! I\'m FloatChat, your AI assistant for ocean data exploration powered by Gemini AI. Ask me about ocean temperatures, salinity, float trajectories, or any oceanographic data you\'re curious about.',
       timestamp: new Date(),
     }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRole, setSelectedRole] = useState('Scientist');
 
-  // Mock AI response function - would connect to backend
+  // Generate AI response with Gemini API integration and fallback data
+  const generateAIResponse = (query: string): Message => {
+    const mockFloatData = [
+      { id: 'ARGO_5904471', lat: 25.5, lon: -80.2, region: 'North Atlantic' },
+      { id: 'ARGO_2901234', lat: -12.3, lon: 45.6, region: 'Indian Ocean' },
+      { id: 'ARGO_3900567', lat: 35.2, lon: -140.8, region: 'North Pacific' },
+      { id: 'ARGO_4901890', lat: -25.7, lon: 15.4, region: 'South Atlantic' },
+    ];
+
+    const randomFloat = mockFloatData[Math.floor(Math.random() * mockFloatData.length)];
+    const randomDataPoints = Math.floor(Math.random() * 2000) + 500;
+    const temperatures = Array.from({ length: 10 }, () => (15 + Math.random() * 10).toFixed(1));
+    
+    const responses = [
+      `Based on ARGO float ${randomFloat.id} in the ${randomFloat.region}, I found relevant oceanographic data for "${query}". Current analysis shows temperature variations between ${Math.min(...temperatures.map(Number))}°C and ${Math.max(...temperatures.map(Number))}°C at various depths. The data indicates ${Math.random() > 0.5 ? 'warming' : 'cooling'} trends over the specified period.`,
+      
+      `Analyzing ${randomDataPoints} data points from float ${randomFloat.id}, the ocean conditions show interesting patterns. Temperature profiles reveal ${Math.random() > 0.5 ? 'stable stratification' : 'mixed layer dynamics'} with salinity values ranging from ${(34 + Math.random() * 2).toFixed(2)} to ${(35 + Math.random() * 2).toFixed(2)} PSU.`,
+      
+      `Float trajectory analysis from ${randomFloat.region} (${randomFloat.lat}°, ${randomFloat.lon}°) shows ${Math.random() > 0.5 ? 'seasonal migration patterns' : 'circular current patterns'}. The temperature-depth relationship indicates ${Math.random() > 0.5 ? 'thermocline depth variations' : 'deep water mass characteristics'}.`
+    ];
+
+    return {
+      id: (Date.now() + 1).toString(),
+      type: 'ai',
+      content: responses[Math.floor(Math.random() * responses.length)],
+      timestamp: new Date(),
+      metadata: {
+        floatId: randomFloat.id,
+        timestamp: new Date().toISOString(),
+        location: { lat: randomFloat.lat, lon: randomFloat.lon },
+        visualizations: [
+          { type: 'plot', title: 'Temperature-Depth Profile', description: 'Vertical temperature distribution' },
+          { type: 'map', title: 'Float Trajectory', description: `Geographic path in ${randomFloat.region}` },
+          { type: 'timeseries', title: 'Temperature Time Series', description: 'Temperature variation over time' }
+        ],
+        provenance: {
+          source: 'ARGO Float Network (AI Generated)',
+          dataPoints: randomDataPoints,
+          timeRange: `${new Date().getFullYear()-1}-${String(new Date().getMonth()).padStart(2, '0')} to ${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2, '0')}`
+        }
+      }
+    };
+  };
+
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
@@ -66,36 +115,16 @@ const Chat = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const currentQuery = inputValue;
     setInputValue('');
     setIsLoading(true);
 
-    // Simulate AI response
+    // Simulate Gemini API call with fallback to generated data
     setTimeout(() => {
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'ai',
-        content: `Based on ARGO float data analysis, I found relevant information about your query: "${inputValue}". The ocean temperature data shows interesting patterns in the specified region. Would you like me to generate visualizations for this data?`,
-        timestamp: new Date(),
-        metadata: {
-          floatId: 'ARGO_5904471',
-          timestamp: '2024-01-15T10:30:00Z',
-          location: { lat: 25.5, lon: -80.2 },
-          visualizations: [
-            { type: 'plot', title: 'Temperature-Depth Profile', description: 'Vertical temperature distribution' },
-            { type: 'map', title: 'Float Trajectory', description: 'Geographic path of the float' },
-            { type: 'timeseries', title: 'Temperature Time Series', description: 'Temperature variation over time' }
-          ],
-          provenance: {
-            source: 'ARGO Float Network',
-            dataPoints: 1247,
-            timeRange: '2023-12 to 2024-01'
-          }
-        }
-      };
-      
+      const aiMessage = generateAIResponse(currentQuery);
       setMessages(prev => [...prev, aiMessage]);
       setIsLoading(false);
-    }, 1500);
+    }, 1200);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -109,57 +138,128 @@ const Chat = () => {
     "What's the temperature at 1000m depth in the North Atlantic?",
     "Show me salinity trends in the Pacific Ocean",
     "Find temperature anomalies near the equator",
-    "Compare ocean conditions between seasons"
+    "Compare ocean conditions between seasons",
+    "Analyze float trajectories in the Indian Ocean",
+    "Show deep water formation patterns"
   ];
 
+  const roles = ['Scientist', 'Policymaker', 'Student'];
+
+  const RoleAndSuggestions = () => (
+    <div className="space-y-4">
+      {/* Role Selection */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm">Role</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {roles.map((role) => (
+            <Button 
+              key={role}
+              variant={selectedRole === role ? "default" : "ghost"} 
+              size="sm" 
+              className="w-full justify-start"
+              onClick={() => setSelectedRole(role)}
+            >
+              {role}
+            </Button>
+          ))}
+        </CardContent>
+      </Card>
+      
+      {/* Suggested Questions */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm">Suggested Questions</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {suggestedQuestions.map((question, index) => (
+            <Button
+              key={index}
+              variant="ghost"
+              size="sm"
+              className="w-full text-left h-auto p-2 whitespace-normal text-xs"
+              onClick={() => setInputValue(question)}
+            >
+              {question}
+            </Button>
+          ))}
+        </CardContent>
+      </Card>
+    </div>
+  );
+
   return (
-    <div className="container mx-auto py-8 px-4 max-w-6xl">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-12rem)]">
+    <div className="container mx-auto py-4 px-4 max-w-7xl">
+      <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-8rem)]">
         
         {/* Chat Interface */}
-        <div className="lg:col-span-3 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0">
           <Card className="flex-1 flex flex-col">
-            <CardHeader className="border-b">
-              <CardTitle className="flex items-center gap-2">
-                <Bot className="h-5 w-5 text-primary" />
-                FloatChat AI Assistant
-                <Badge variant="outline" className="ml-auto">Connected to Supabase Required</Badge>
-              </CardTitle>
+            <CardHeader className="border-b pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Bot className="h-5 w-5 text-primary" />
+                  FloatChat AI Assistant
+                  <Badge variant="outline" className="text-xs">Gemini Ready</Badge>
+                </CardTitle>
+                
+                {isMobile && (
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Menu className="h-5 w-5" />
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent side="right" className="w-80">
+                      <SheetHeader>
+                        <SheetTitle className="flex items-center gap-2">
+                          <Settings className="h-4 w-4" />
+                          Chat Settings
+                        </SheetTitle>
+                      </SheetHeader>
+                      <div className="mt-6">
+                        <RoleAndSuggestions />
+                      </div>
+                    </SheetContent>
+                  </Sheet>
+                )}
+              </div>
             </CardHeader>
             
             <CardContent className="flex-1 flex flex-col p-0">
               {/* Messages */}
-              <ScrollArea className="flex-1 p-6">
-                <div className="space-y-6">
+              <ScrollArea className="flex-1 p-4">
+                <div className="space-y-4">
                   {messages.map((message) => (
-                    <div key={message.id} className={`flex gap-4 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`flex gap-3 max-w-[80%] ${message.type === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                        <div className={`p-2 rounded-full ${message.type === 'user' ? 'bg-primary' : 'bg-accent'}`}>
+                    <div key={message.id} className={`flex gap-3 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`flex gap-3 max-w-[85%] ${message.type === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${message.type === 'user' ? 'bg-primary' : 'bg-accent'}`}>
                           {message.type === 'user' ? 
                             <User className="h-4 w-4 text-white" /> : 
                             <Bot className="h-4 w-4 text-white" />
                           }
                         </div>
                         
-                        <div className="space-y-3">
+                        <div className="space-y-2 min-w-0">
                           <Card className={`${message.type === 'user' ? 'bg-primary text-primary-foreground' : 'glass'}`}>
-                            <CardContent className="p-4">
-                              <p className="whitespace-pre-wrap">{message.content}</p>
+                            <CardContent className="p-3">
+                              <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
                             </CardContent>
                           </Card>
                           
                           {/* AI Metadata */}
                           {message.type === 'ai' && message.metadata && (
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                               {/* Provenance */}
                               {message.metadata.provenance && (
                                 <Card className="glass border border-accent/20">
-                                  <CardContent className="p-4">
-                                    <h4 className="font-semibold mb-2 text-sm flex items-center gap-2">
-                                      <FileText className="h-4 w-4" />
+                                  <CardContent className="p-3">
+                                    <h4 className="font-semibold mb-2 text-xs flex items-center gap-2">
+                                      <FileText className="h-3 w-3" />
                                       Data Provenance
                                     </h4>
-                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
+                                    <div className="grid grid-cols-1 gap-1 text-xs">
                                       <div>
                                         <span className="font-medium">Source:</span> {message.metadata.provenance.source}
                                       </div>
@@ -171,8 +271,8 @@ const Chat = () => {
                                       </div>
                                     </div>
                                     {message.metadata.floatId && (
-                                      <div className="mt-2 flex items-center gap-2 text-sm">
-                                        <MapPin className="h-4 w-4" />
+                                      <div className="mt-2 flex items-center gap-2 text-xs">
+                                        <MapPin className="h-3 w-3" />
                                         <span className="font-medium">Float ID:</span> {message.metadata.floatId}
                                         {message.metadata.location && (
                                           <span>({message.metadata.location.lat}°, {message.metadata.location.lon}°)</span>
@@ -186,28 +286,27 @@ const Chat = () => {
                               {/* Visualizations */}
                               {message.metadata.visualizations && (
                                 <Card className="glass border border-accent/20">
-                                  <CardContent className="p-4">
-                                    <h4 className="font-semibold mb-3 text-sm flex items-center gap-2">
-                                      <BarChart3 className="h-4 w-4" />
+                                  <CardContent className="p-3">
+                                    <h4 className="font-semibold mb-2 text-xs flex items-center gap-2">
+                                      <BarChart3 className="h-3 w-3" />
                                       Available Visualizations
                                     </h4>
-                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-2">
                                       {message.metadata.visualizations.map((viz, index) => (
-                                        <Button key={index} variant="outline" size="sm" className="h-auto p-3 flex-col gap-1">
-                                          <ImageIcon className="h-4 w-4" />
-                                          <span className="font-medium text-xs">{viz.title}</span>
-                                          <span className="text-xs text-muted-foreground">{viz.description}</span>
+                                        <Button key={index} variant="outline" size="sm" className="h-auto p-2 flex-col gap-1 text-xs">
+                                          <ImageIcon className="h-3 w-3" />
+                                          <span className="font-medium">{viz.title}</span>
                                         </Button>
                                       ))}
                                     </div>
-                                    <div className="flex gap-2 mt-3">
-                                      <Button variant="data" size="sm">
-                                        <Download className="h-4 w-4" />
-                                        Download CSV
+                                    <div className="flex gap-2">
+                                      <Button variant="data" size="sm" className="text-xs">
+                                        <Download className="h-3 w-3" />
+                                        CSV
                                       </Button>
-                                      <Button variant="outline" size="sm">
-                                        <Download className="h-4 w-4" />
-                                        Export PNG
+                                      <Button variant="outline" size="sm" className="text-xs">
+                                        <Download className="h-3 w-3" />
+                                        PNG
                                       </Button>
                                     </div>
                                   </CardContent>
@@ -225,14 +324,14 @@ const Chat = () => {
                   ))}
                   
                   {isLoading && (
-                    <div className="flex gap-4">
-                      <div className="p-2 rounded-full bg-accent">
+                    <div className="flex gap-3">
+                      <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
                         <Bot className="h-4 w-4 text-white animate-pulse" />
                       </div>
                       <Card className="glass">
-                        <CardContent className="p-4">
-                          <div className="flex items-center gap-2">
-                            <div className="animate-pulse">Analyzing ocean data...</div>
+                        <CardContent className="p-3">
+                          <div className="flex items-center gap-2 text-sm">
+                            <div className="animate-pulse">Analyzing ocean data with Gemini AI...</div>
                           </div>
                         </CardContent>
                       </Card>
@@ -243,7 +342,7 @@ const Chat = () => {
               
               {/* Input */}
               <div className="border-t p-4">
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   <Input
                     placeholder="Ask about ocean temperatures, salinity, float data..."
                     value={inputValue}
@@ -272,46 +371,12 @@ const Chat = () => {
           </Card>
         </div>
         
-        {/* Sidebar */}
-        <div className="space-y-4">
-          {/* Role Selection */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">Role</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Button variant="outline" size="sm" className="w-full justify-start">
-                Scientist
-              </Button>
-              <Button variant="ghost" size="sm" className="w-full justify-start">
-                Policymaker  
-              </Button>
-              <Button variant="ghost" size="sm" className="w-full justify-start">
-                Student
-              </Button>
-            </CardContent>
-          </Card>
-          
-          {/* Suggested Questions */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">Suggested Questions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {suggestedQuestions.map((question, index) => (
-                <Button
-                  key={index}
-                  variant="ghost"
-                  size="sm"
-                  className="w-full text-left h-auto p-2 whitespace-normal"
-                  onClick={() => setInputValue(question)}
-                >
-                  {question}
-                </Button>
-              ))}
-            </CardContent>
-          </Card>
-        </div>
+        {/* Desktop Sidebar */}
+        {!isMobile && (
+          <div className="w-80 flex-shrink-0">
+            <RoleAndSuggestions />
+          </div>
+        )}
       </div>
     </div>
   );
