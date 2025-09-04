@@ -74,7 +74,21 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-2">
             <NavLinks />
-            {/* Auth Button */}
+          </nav>
+
+          {/* Theme Toggle & Mobile Menu */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="hidden sm:flex"
+              aria-label="Toggle theme"
+            >
+              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-yellow-400" />
+              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-blue-700" />
+            </Button>
+            {/* Auth Button (desktop) */}
             {!isLoggedIn ? (
               <Link to="/signin">
                 <Button variant="outline" size="sm" className="ml-2">
@@ -95,21 +109,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 Log Out
               </Button>
             )}
-          </nav>
-
-          {/* Theme Toggle & Mobile Menu */}
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="hidden sm:flex"
-              aria-label="Toggle theme"
-            >
-              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-yellow-400" />
-              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-blue-700" />
-            </Button>
-
             {/* Mobile Menu */}
             <Sheet>
               <SheetTrigger asChild>
