@@ -2,41 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* FloatChat Ocean Data Design System */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Ocean-inspired color palette */
+    --background: 220 15% 97%;
+    --foreground: 200 50% 15%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 220 20% 98%;
+    --card-foreground: 200 50% 15%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 220 20% 98%;
+    --popover-foreground: 200 50% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Ocean blues - primary palette */
+    --primary: 200 85% 45%;
+    --primary-foreground: 220 15% 97%;
+    --primary-light: 200 75% 65%;
+    --primary-dark: 200 95% 25%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Teal secondary colors */
+    --secondary: 180 25% 88%;
+    --secondary-foreground: 200 50% 15%;
+    --secondary-accent: 180 60% 50%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Ocean depths - muted tones */
+    --muted: 200 20% 90%;
+    --muted-foreground: 200 25% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Data visualization accent */
+    --accent: 180 60% 50%;
+    --accent-foreground: 220 15% 97%;
+    --accent-light: 180 50% 70%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Scientific alert colors */
+    --destructive: 350 80% 55%;
+    --destructive-foreground: 220 15% 97%;
+    
+    --success: 140 60% 45%;
+    --success-foreground: 220 15% 97%;
+    
+    --warning: 45 85% 55%;
+    --warning-foreground: 200 50% 15%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 200 20% 85%;
+    --input: 200 15% 92%;
+    --ring: 200 85% 45%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Ocean gradients */
+    --gradient-ocean: linear-gradient(135deg, hsl(200 85% 45%) 0%, hsl(180 60% 50%) 100%);
+    --gradient-deep: linear-gradient(180deg, hsl(200 95% 25%) 0%, hsl(220 80% 15%) 100%);
+    --gradient-surface: linear-gradient(135deg, hsl(200 75% 65%) 0%, hsl(180 50% 70%) 100%);
+    --gradient-glass: linear-gradient(135deg, hsla(200 50% 95% / 0.8) 0%, hsla(180 30% 90% / 0.6) 100%);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Shadows */
+    --shadow-ocean: 0 10px 30px -10px hsl(200 85% 45% / 0.3);
+    --shadow-deep: 0 20px 60px -15px hsl(200 95% 25% / 0.4);
+    --shadow-glass: 0 8px 32px hsla(200 50% 50% / 0.1);
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,41 +85,55 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark ocean theme */
+    --background: 200 95% 8%;
+    --foreground: 200 30% 90%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 200 90% 10%;
+    --card-foreground: 200 30% 90%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 200 90% 10%;
+    --popover-foreground: 200 30% 90%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Dark ocean primary */
+    --primary: 200 75% 65%;
+    --primary-foreground: 200 95% 8%;
+    --primary-light: 200 60% 75%;
+    --primary-dark: 200 85% 35%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 180 15% 15%;
+    --secondary-foreground: 200 30% 90%;
+    --secondary-accent: 180 50% 60%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 200 15% 15%;
+    --muted-foreground: 200 20% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 180 50% 60%;
+    --accent-foreground: 200 95% 8%;
+    --accent-light: 180 40% 75%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 350 70% 60%;
+    --destructive-foreground: 200 95% 8%;
+    
+    --success: 140 50% 55%;
+    --success-foreground: 200 95% 8%;
+    
+    --warning: 45 75% 65%;
+    --warning-foreground: 200 95% 8%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 200 25% 20%;
+    --input: 200 20% 18%;
+    --ring: 200 75% 65%;
+
+    /* Dark gradients */
+    --gradient-ocean: linear-gradient(135deg, hsl(200 75% 35%) 0%, hsl(180 50% 45%) 100%);
+    --gradient-deep: linear-gradient(180deg, hsl(200 85% 15%) 0%, hsl(220 90% 8%) 100%);
+    --gradient-surface: linear-gradient(135deg, hsl(200 60% 45%) 0%, hsl(180 40% 55%) 100%);
+    --gradient-glass: linear-gradient(135deg, hsla(200 40% 15% / 0.8) 0%, hsla(180 30% 20% / 0.6) 100%);
+
+    --shadow-ocean: 0 10px 30px -10px hsl(200 75% 35% / 0.4);
+    --shadow-deep: 0 20px 60px -15px hsl(200 85% 15% / 0.6);
+    --shadow-glass: 0 8px 32px hsla(200 50% 30% / 0.2);
   }
 }
 
@@ -100,6 +143,36 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Ocean wave animation */
+  .wave-animation {
+    background: var(--gradient-ocean);
+    background-size: 400% 400%;
+    animation: wave 8s ease-in-out infinite;
+  }
+
+  @keyframes wave {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* Glass morphism effect */
+  .glass {
+    background: var(--gradient-glass);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsla(200 50% 80% / 0.2);
+  }
+
+  /* Data visualization glow */
+  .data-glow {
+    box-shadow: var(--shadow-ocean);
+    transition: var(--transition-smooth);
+  }
+
+  .data-glow:hover {
+    box-shadow: var(--shadow-deep);
+    transform: translateY(-2px);
   }
 }
