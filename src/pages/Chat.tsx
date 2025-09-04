@@ -161,7 +161,7 @@ const Chat = () => {
     "Show deep water formation patterns"
   ];
 
-  const roles = ['Scientist', 'Policymaker', 'Student'];
+  const roles = ['Scientist', 'Student'];
 
   const RoleAndSuggestions = () => (
     <div className="space-y-4">

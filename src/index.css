@@ -85,55 +85,55 @@
   }
 
   .dark {
-    /* Dark ocean theme */
-    --background: 200 95% 8%;
-    --foreground: 200 30% 90%;
+    /* Vibrant dark ocean theme */
+    --background: 220 80% 7%;
+    --foreground: 200 40% 95%;
 
-    --card: 200 90% 10%;
-    --card-foreground: 200 30% 90%;
+    --card: 220 60% 10%;
+    --card-foreground: 200 40% 95%;
 
-    --popover: 200 90% 10%;
-    --popover-foreground: 200 30% 90%;
+    --popover: 220 60% 12%;
+    --popover-foreground: 200 40% 95%;
 
-    /* Dark ocean primary */
-    --primary: 200 75% 65%;
-    --primary-foreground: 200 95% 8%;
-    --primary-light: 200 60% 75%;
-    --primary-dark: 200 85% 35%;
+    /* Brighter ocean primary */
+    --primary: 200 100% 65%;
+    --primary-foreground: 220 80% 7%;
+    --primary-light: 200 100% 75%;
+    --primary-dark: 200 100% 35%;
 
-    --secondary: 180 15% 15%;
-    --secondary-foreground: 200 30% 90%;
-    --secondary-accent: 180 50% 60%;
+    --secondary: 180 40% 20%;
+    --secondary-foreground: 200 40% 95%;
+    --secondary-accent: 180 80% 60%;
 
-    --muted: 200 15% 15%;
-    --muted-foreground: 200 20% 65%;
+    --muted: 210 30% 15%;
+    --muted-foreground: 200 30% 75%;
 
-    --accent: 180 50% 60%;
-    --accent-foreground: 200 95% 8%;
-    --accent-light: 180 40% 75%;
+    --accent: 180 100% 60%;
+    --accent-foreground: 220 80% 7%;
+    --accent-light: 180 100% 75%;
 
-    --destructive: 350 70% 60%;
-    --destructive-foreground: 200 95% 8%;
+    --destructive: 350 80% 60%;
+    --destructive-foreground: 220 80% 7%;
     
-    --success: 140 50% 55%;
-    --success-foreground: 200 95% 8%;
+    --success: 140 80% 55%;
+    --success-foreground: 220 80% 7%;
     
-    --warning: 45 75% 65%;
-    --warning-foreground: 200 95% 8%;
+    --warning: 45 90% 65%;
+    --warning-foreground: 220 80% 7%;
 
-    --border: 200 25% 20%;
-    --input: 200 20% 18%;
-    --ring: 200 75% 65%;
+    --border: 200 40% 20%;
+    --input: 200 30% 18%;
+    --ring: 200 100% 65%;
 
-    /* Dark gradients */
-    --gradient-ocean: linear-gradient(135deg, hsl(200 75% 35%) 0%, hsl(180 50% 45%) 100%);
-    --gradient-deep: linear-gradient(180deg, hsl(200 85% 15%) 0%, hsl(220 90% 8%) 100%);
-    --gradient-surface: linear-gradient(135deg, hsl(200 60% 45%) 0%, hsl(180 40% 55%) 100%);
-    --gradient-glass: linear-gradient(135deg, hsla(200 40% 15% / 0.8) 0%, hsla(180 30% 20% / 0.6) 100%);
+    /* Vibrant gradients */
+    --gradient-ocean: linear-gradient(135deg, hsl(200 100% 35%) 0%, hsl(180 100% 45%) 100%);
+    --gradient-deep: linear-gradient(180deg, hsl(200 100% 15%) 0%, hsl(220 100% 8%) 100%);
+    --gradient-surface: linear-gradient(135deg, hsl(200 100% 45%) 0%, hsl(180 100% 55%) 100%);
+    --gradient-glass: linear-gradient(135deg, hsla(200 80% 15% / 0.8) 0%, hsla(180 80% 20% / 0.6) 100%);
 
-    --shadow-ocean: 0 10px 30px -10px hsl(200 75% 35% / 0.4);
-    --shadow-deep: 0 20px 60px -15px hsl(200 85% 15% / 0.6);
-    --shadow-glass: 0 8px 32px hsla(200 50% 30% / 0.2);
+    --shadow-ocean: 0 10px 30px -10px hsl(200 100% 35% / 0.5);
+    --shadow-deep: 0 20px 60px -15px hsl(200 100% 15% / 0.7);
+    --shadow-glass: 0 8px 32px hsla(200 100% 30% / 0.3);
   }
 }
 

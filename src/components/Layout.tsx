@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Waves, MessageCircle, BarChart3, Upload, Info, Users, Menu, Moon, Sun } from 'lucide-react';
+import { Waves, MessageCircle, BarChart3, Upload, Info, Users, Menu, Moon, Sun, Home } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/components/ThemeProvider';
@@ -11,7 +11,7 @@ interface LayoutProps {
 }
 
 const navItems = [
-  { path: '/', label: 'Home', icon: Waves },
+  { path: '/', label: 'Home', icon: Home },
   { path: '/chat', label: 'Chat', icon: MessageCircle },
   { path: '/dashboard', label: 'Dashboard', icon: BarChart3 },
   { path: '/upload', label: 'Upload Data', icon: Upload },
@@ -22,6 +22,14 @@ const navItems = [
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const { theme, setTheme } = useTheme();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem('token'));
+    const onStorage = () => setIsLoggedIn(!!localStorage.getItem('token'));
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
 
   const NavLinks = () => (
     <>
@@ -66,6 +74,27 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-2">
             <NavLinks />
+            {/* Auth Button */}
+            {!isLoggedIn ? (
+              <Link to="/signin">
+                <Button variant="outline" size="sm" className="ml-2">
+                  Sign In
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                className="ml-2"
+                onClick={() => {
+                  localStorage.removeItem('token');
+                  setIsLoggedIn(false);
+                  window.location.reload();
+                }}
+              >
+                Log Out
+              </Button>
+            )}
           </nav>
 
           {/* Theme Toggle & Mobile Menu */}
@@ -98,6 +127,25 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   </Link>
                   <nav className="flex flex-col gap-2">
                     <NavLinks />
+                    {/* Auth Button for mobile */}
+                    {!isLoggedIn ? (
+                      <Link to="/signin">
+                        <Button variant="outline" size="sm" className="mt-2 w-full">Sign In</Button>
+                      </Link>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-2 w-full"
+                        onClick={() => {
+                          localStorage.removeItem('token');
+                          setIsLoggedIn(false);
+                          window.location.reload();
+                        }}
+                      >
+                        Log Out
+                      </Button>
+                    )}
                   </nav>
                   <div className="pt-4 border-t">
                     <Button

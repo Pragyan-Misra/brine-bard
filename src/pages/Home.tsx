@@ -97,49 +97,22 @@ const Home = () => {
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center space-y-2">
-              <div className="text-4xl md:text-5xl font-bold text-primary">4,000+</div>
+              <div className="text-4xl md:text-5xl font-bold text-primary dark:text-white">4,000+</div>
               <div className="text-lg text-muted-foreground">Active Ocean Floats</div>
             </div>
             <div className="text-center space-y-2">
-              <div className="text-4xl md:text-5xl font-bold text-accent">2M+</div>
+              <div className="text-4xl md:text-5xl font-bold text-accent dark:text-white">2M+</div>
               <div className="text-lg text-muted-foreground">Ocean Profiles</div>
             </div>
             <div className="text-center space-y-2">
-              <div className="text-4xl md:text-5xl font-bold text-primary-light">24/7</div>
+              <div className="text-4xl md:text-5xl font-bold text-primary-light dark:text-white">24/7</div>
               <div className="text-lg text-muted-foreground">Real-time Data</div>
             </div>
           </div>
         </div>
       </section>
 
-  {/* CTA Section */}
-  <section className="py-16 px-4 animate-fade-in-up delay-500">
-        <div className="container mx-auto">
-          <Card className="glass border-0 data-glow p-8 text-center">
-            <div className="max-w-2xl mx-auto space-y-6">
-              <Zap className="h-12 w-12 mx-auto text-accent" />
-              <h3 className="text-2xl md:text-3xl font-bold">Ready to Explore?</h3>
-              <p className="text-lg text-muted-foreground">
-                Start your ocean data discovery journey today. Ask questions, explore patterns, and 
-                gain insights from the world's largest ocean observation network.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/chat">
-                  <Button variant="ocean" size="lg">
-                    <MessageCircle className="h-5 w-5" />
-                    Ask Your First Question
-                  </Button>
-                </Link>
-                <Link to="/about">
-                  <Button variant="outline" size="lg">
-                    Learn More
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </Card>
-        </div>
-      </section>
+  {/* CTA Section removed as requested */}
     </div>
   );
 };
