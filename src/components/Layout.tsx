@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Waves, MessageCircle, BarChart3, Upload, Info, Users, Menu, Moon, Sun } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { useTheme } from 'next-themes';
+import { useTheme } from '@/components/ThemeProvider';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -75,9 +75,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               size="sm"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="hidden sm:flex"
+              aria-label="Toggle theme"
             >
-              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-yellow-400" />
+              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-blue-700" />
             </Button>
 
             {/* Mobile Menu */}
@@ -104,9 +105,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                       size="sm"
                       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                       className="w-full justify-start gap-2"
+                      aria-label="Toggle theme"
                     >
-                      <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                      <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                      <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-yellow-400" />
+                      <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-blue-700" />
                       Toggle theme
                     </Button>
                   </div>
