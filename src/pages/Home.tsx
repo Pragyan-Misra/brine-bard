@@ -32,36 +32,11 @@ const Home = () => {
     <div className="space-y-16">
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden px-4">
-        {/* Animated SVG Ocean Map Background */}
-        <svg className="absolute inset-0 w-full h-full z-0 animate-fade-in" viewBox="0 0 1920 900" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-          <defs>
-            <radialGradient id="oceanGradient" cx="50%" cy="50%" r="80%" fx="50%" fy="50%">
-              <stop offset="0%" stopColor="#3ecbff" stopOpacity="0.7" />
-              <stop offset="100%" stopColor="#0a2540" stopOpacity="1" />
-            </radialGradient>
-            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="30" result="coloredBlur"/>
-              <feMerge>
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-          </defs>
-          <rect width="1920" height="900" fill="url(#oceanGradient)" />
-          {/* Add animated glowing points for floats */}
-          {[...Array(30)].map((_, i) => (
-            <circle key={i} cx={Math.random()*1920} cy={Math.random()*900} r={Math.random()*8+4} fill="#3ecbff" opacity="0.5" filter="url(#glow)" >
-              <animate attributeName="opacity" values="0.3;1;0.3" dur={`${2+Math.random()*2}s`} repeatCount="indefinite" begin={`${i*0.2}s`} />
-            </circle>
-          ))}
-        </svg>
+        {/* Hero Banner Background Image */}
+        <img src="/hero-map.png" alt="World Ocean Map" className="absolute inset-0 w-full h-full object-cover z-0 opacity-90 animate-fade-in" draggable="false" />
         <div className="container mx-auto text-center relative z-10 animate-fade-in-up">
           <div className="max-w-4xl mx-auto space-y-8">
-            <div className="flex justify-center mb-6 animate-bounce-slow">
-              <div className="p-4 rounded-full bg-gradient-to-r from-primary to-accent text-white shadow-lg animate-glow">
-                <Waves className="h-12 w-12" />
-              </div>
-            </div>
+            {/* Removed circular logo for a cleaner hero section */}
             <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-tight animate-gradient-move drop-shadow-2xl" style={{textShadow:'0 4px 24px rgba(0,0,0,0.25), 0 1px 0 #0a2540'}}>
               Democratizing Access to <span className="text-accent font-extrabold animate-pulse" style={{color:'#3ecbff',textShadow:'0 2px 12px #0a2540'}}>Ocean Intelligence</span>
             </h1>
