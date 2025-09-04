@@ -196,7 +196,7 @@ const Team = () => {
                   <h4 className="font-semibold text-sm">Key Achievements</h4>
                   <div className="flex flex-wrap gap-1">
                     {member.achievements.map((achievement) => (
-                      <Badge key={achievement} className="text-xs bg-gradient-to-r from-primary/10 to-accent/10 text-primary border-primary/20">
+                      <Badge key={achievement} className="text-xs bg-accent text-white border-accent shadow-sm" style={{textShadow:'0 2px 8px #0a2540'}}>
                         {achievement}
                       </Badge>
                     ))}

@@ -31,48 +31,53 @@ const Home = () => {
   return (
     <div className="space-y-16">
       {/* Hero Section */}
-      <section className="relative py-20 px-4">
-        <div className="absolute inset-0 wave-animation opacity-10 rounded-3xl"></div>
-        <div className="container mx-auto text-center relative z-10">
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden px-4">
+        {/* Animated SVG Ocean Map Background */}
+        <svg className="absolute inset-0 w-full h-full z-0 animate-fade-in" viewBox="0 0 1920 900" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <radialGradient id="oceanGradient" cx="50%" cy="50%" r="80%" fx="50%" fy="50%">
+              <stop offset="0%" stopColor="#3ecbff" stopOpacity="0.7" />
+              <stop offset="100%" stopColor="#0a2540" stopOpacity="1" />
+            </radialGradient>
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="30" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          <rect width="1920" height="900" fill="url(#oceanGradient)" />
+          {/* Add animated glowing points for floats */}
+          {[...Array(30)].map((_, i) => (
+            <circle key={i} cx={Math.random()*1920} cy={Math.random()*900} r={Math.random()*8+4} fill="#3ecbff" opacity="0.5" filter="url(#glow)" >
+              <animate attributeName="opacity" values="0.3;1;0.3" dur={`${2+Math.random()*2}s`} repeatCount="indefinite" begin={`${i*0.2}s`} />
+            </circle>
+          ))}
+        </svg>
+        <div className="container mx-auto text-center relative z-10 animate-fade-in-up">
           <div className="max-w-4xl mx-auto space-y-8">
-            <div className="flex justify-center mb-6">
-              <div className="p-4 rounded-full bg-gradient-to-r from-primary to-accent text-white shadow-lg">
+            <div className="flex justify-center mb-6 animate-bounce-slow">
+              <div className="p-4 rounded-full bg-gradient-to-r from-primary to-accent text-white shadow-lg animate-glow">
                 <Waves className="h-12 w-12" />
               </div>
             </div>
-            
-            <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-primary via-accent to-primary-light bg-clip-text text-transparent leading-tight">
-              FloatChat
+            <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-tight animate-gradient-move drop-shadow-2xl" style={{textShadow:'0 4px 24px rgba(0,0,0,0.25), 0 1px 0 #0a2540'}}>
+              Democratizing Access to <span className="text-accent font-extrabold animate-pulse" style={{color:'#3ecbff',textShadow:'0 2px 12px #0a2540'}}>Ocean Intelligence</span>
             </h1>
-            
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              AI-Powered Conversational Interface for ARGO Ocean Data Discovery and Visualization
+            <p className="text-xl md:text-2xl max-w-2xl mx-auto leading-relaxed animate-fade-in-up delay-100" style={{color:'#e0f7fa',textShadow:'0 2px 8px #0a2540'}}>
+              FloatChat is an AI-powered conversational platform that unlocks the mysteries of the ocean, making complex data accessible for everyone.
             </p>
-            
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Explore the world's oceans through intelligent conversations. Ask questions about temperature, 
-              salinity, and ocean conditions in natural language and get instant insights with beautiful visualizations.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8 animate-fade-in-up delay-200">
               <Link to="/chat">
-                <Button variant="ocean" size="xl" className="group">
+                <Button variant="ocean" size="xl" className="group animate-bounce-once shadow-xl">
                   <MessageCircle className="h-5 w-5 group-hover:scale-110 transition-transform" />
-                  Start Chat
+                  Get Started
                 </Button>
               </Link>
-              
-              <Link to="/dashboard">
-                <Button variant="surface" size="xl" className="group">
-                  <BarChart3 className="h-5 w-5 group-hover:scale-110 transition-transform" />
-                  Open Dashboard
-                </Button>
-              </Link>
-              
-              <Link to="/upload">
-                <Button variant="glass" size="xl" className="group">
-                  <Upload className="h-5 w-5 group-hover:scale-110 transition-transform" />
-                  Upload Data
+              <Link to="/about">
+                <Button variant="surface" size="xl" className="group animate-glow shadow-xl">
+                  Learn More
                 </Button>
               </Link>
             </div>
@@ -80,8 +85,8 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 px-4">
+  {/* Features Section */}
+  <section className="py-16 px-4 animate-fade-in-up delay-300">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -112,8 +117,8 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-16 px-4 bg-gradient-to-r from-muted/30 to-accent/5">
+  {/* Stats Section */}
+  <section className="py-16 px-4 bg-gradient-to-r from-muted/30 to-accent/5 animate-fade-in-up delay-400">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center space-y-2">
@@ -132,8 +137,8 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 px-4">
+  {/* CTA Section */}
+  <section className="py-16 px-4 animate-fade-in-up delay-500">
         <div className="container mx-auto">
           <Card className="glass border-0 data-glow p-8 text-center">
             <div className="max-w-2xl mx-auto space-y-6">

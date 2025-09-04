@@ -119,12 +119,30 @@ const Chat = () => {
     setInputValue('');
     setIsLoading(true);
 
-    // Simulate Gemini API call with fallback to generated data
-    setTimeout(() => {
+    // Try real AI API call, fallback to mock if error
+    try {
+      const response = await fetch("/api/ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: currentQuery, role: selectedRole })
+      });
+      if (!response.ok) throw new Error("API error");
+      const data = await response.json();
+      const aiMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: data.content || "Sorry, I couldn't find an answer.",
+        timestamp: new Date(),
+        metadata: data.metadata || undefined
+      };
+      setMessages(prev => [...prev, aiMessage]);
+    } catch (err) {
+      // fallback to mock
       const aiMessage = generateAIResponse(currentQuery);
       setMessages(prev => [...prev, aiMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1200);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -190,12 +208,11 @@ const Chat = () => {
   );
 
   return (
-    <div className="container mx-auto py-4 px-4 max-w-7xl">
-      <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-8rem)]">
-        
+    <div className="container mx-auto py-4 px-4 max-w-7xl h-[calc(100vh-8rem)] flex flex-col">
+      <div className="flex-1 flex flex-col lg:flex-row gap-4 min-h-0">
         {/* Chat Interface */}
-        <div className="flex-1 flex flex-col min-w-0">
-          <Card className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0 min-h-0">
+          <Card className="flex-1 flex flex-col min-h-0">
             <CardHeader className="border-b pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2 text-lg">
@@ -227,27 +244,26 @@ const Chat = () => {
               </div>
             </CardHeader>
             
-            <CardContent className="flex-1 flex flex-col p-0">
+            <CardContent className="flex-1 flex flex-col p-0 min-h-0">
               {/* Messages */}
-              <ScrollArea className="flex-1 p-4">
-                <div className="space-y-4">
+              <div className="flex-1 min-h-0">
+                <ScrollArea className="h-full max-h-full p-4">
+                  <div className="space-y-4">
                   {messages.map((message) => (
                     <div key={message.id} className={`flex gap-3 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`flex gap-3 max-w-[85%] ${message.type === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                      <div className={`flex gap-3 max-w-full md:max-w-[85%] ${message.type === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${message.type === 'user' ? 'bg-primary' : 'bg-accent'}`}>
                           {message.type === 'user' ? 
                             <User className="h-4 w-4 text-white" /> : 
                             <Bot className="h-4 w-4 text-white" />
                           }
                         </div>
-                        
-                        <div className="space-y-2 min-w-0">
-                          <Card className={`${message.type === 'user' ? 'bg-primary text-primary-foreground' : 'glass'}`}>
+                        <div className="space-y-2 min-w-0 break-words w-full">
+                          <Card className={`${message.type === 'user' ? 'bg-primary text-primary-foreground' : 'glass'}`}> 
                             <CardContent className="p-3">
                               <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
                             </CardContent>
                           </Card>
-                          
                           {/* AI Metadata */}
                           {message.type === 'ai' && message.metadata && (
                             <div className="space-y-2">
@@ -282,7 +298,6 @@ const Chat = () => {
                                   </CardContent>
                                 </Card>
                               )}
-                              
                               {/* Visualizations */}
                               {message.metadata.visualizations && (
                                 <Card className="glass border border-accent/20">
@@ -291,15 +306,15 @@ const Chat = () => {
                                       <BarChart3 className="h-3 w-3" />
                                       Available Visualizations
                                     </h4>
-                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-2">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-2 w-full">
                                       {message.metadata.visualizations.map((viz, index) => (
-                                        <Button key={index} variant="outline" size="sm" className="h-auto p-2 flex-col gap-1 text-xs">
+                                        <Button key={index} variant="outline" size="sm" className="h-auto p-2 flex-col gap-1 text-xs w-full min-w-0">
                                           <ImageIcon className="h-3 w-3" />
                                           <span className="font-medium">{viz.title}</span>
                                         </Button>
                                       ))}
                                     </div>
-                                    <div className="flex gap-2">
+                                    <div className="flex gap-2 flex-wrap">
                                       <Button variant="data" size="sm" className="text-xs">
                                         <Download className="h-3 w-3" />
                                         CSV
@@ -314,7 +329,6 @@ const Chat = () => {
                               )}
                             </div>
                           )}
-                          
                           <div className="text-xs text-muted-foreground">
                             {message.timestamp.toLocaleTimeString()}
                           </div>
@@ -337,8 +351,10 @@ const Chat = () => {
                       </Card>
                     </div>
                   )}
+                  {/* End of messages */}
                 </div>
-              </ScrollArea>
+                </ScrollArea>
+              </div>
               
               {/* Input */}
               <div className="border-t p-4">
