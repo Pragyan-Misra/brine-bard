@@ -121,13 +121,24 @@ const Chat = () => {
 
     // Try real AI API call, fallback to mock if error
     try {
+      console.log('🚀 Sending query to AI:', currentQuery);
       const response = await fetch("/api/ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: currentQuery, role: selectedRole })
       });
-      if (!response.ok) throw new Error("API error");
+      
+      console.log('📡 API Response status:', response.status);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('❌ API Error:', errorData);
+        throw new Error(`API error: ${response.status} - ${errorData.error || 'Unknown error'}`);
+      }
+      
       const data = await response.json();
+      console.log('✅ AI Response received:', data);
+      
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
@@ -137,12 +148,25 @@ const Chat = () => {
       };
       setMessages(prev => [...prev, aiMessage]);
     } catch (err) {
+      console.warn('⚠️ Falling back to mock data:', err);
       // fallback to mock
       const aiMessage = generateAIResponse(currentQuery);
       setMessages(prev => [...prev, aiMessage]);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleVisualizationClick = (viz: any, message: Message) => {
+    console.log(`🎯 Opening ${viz.title} for ${message.metadata?.floatId}`);
+    // TODO: Add actual visualization logic here
+    alert(`${viz.title} visualization would open here!\n\nFloat: ${message.metadata?.floatId}\nDescription: ${viz.description}`);
+  };
+
+  const handleDownloadData = (format: 'csv' | 'png', message: Message) => {
+    console.log(`📥 Downloading ${format.toUpperCase()} for ${message.metadata?.floatId}`);
+    // TODO: Add actual download logic here
+    alert(`${format.toUpperCase()} download would start here!\n\nFloat: ${message.metadata?.floatId}\nData Points: ${message.metadata?.provenance?.dataPoints}`);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -306,24 +330,40 @@ const Chat = () => {
                                       <BarChart3 className="h-3 w-3" />
                                       Available Visualizations
                                     </h4>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-2 w-full">
-                                      {message.metadata.visualizations.map((viz, index) => (
-                                        <Button key={index} variant="outline" size="sm" className="h-auto p-2 flex-col gap-1 text-xs w-full min-w-0">
-                                          <ImageIcon className="h-3 w-3" />
-                                          <span className="font-medium">{viz.title}</span>
-                                        </Button>
-                                      ))}
-                                    </div>
-                                    <div className="flex gap-2 flex-wrap">
-                                      <Button variant="data" size="sm" className="text-xs">
-                                        <Download className="h-3 w-3" />
-                                        CSV
-                                      </Button>
-                                      <Button variant="outline" size="sm" className="text-xs">
-                                        <Download className="h-3 w-3" />
-                                        PNG
-                                      </Button>
-                                    </div>
+                                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-2 w-full">
+                                       {message.metadata.visualizations.map((viz, index) => (
+                                         <Button 
+                                           key={index} 
+                                           variant="outline" 
+                                           size="sm" 
+                                           className="h-auto p-2 flex-col gap-1 text-xs w-full min-w-0 hover:bg-accent/50"
+                                           onClick={() => handleVisualizationClick(viz, message)}
+                                         >
+                                           <ImageIcon className="h-3 w-3" />
+                                           <span className="font-medium">{viz.title}</span>
+                                         </Button>
+                                       ))}
+                                     </div>
+                                     <div className="flex gap-2 flex-wrap">
+                                       <Button 
+                                         variant="data" 
+                                         size="sm" 
+                                         className="text-xs"
+                                         onClick={() => handleDownloadData('csv', message)}
+                                       >
+                                         <Download className="h-3 w-3" />
+                                         CSV
+                                       </Button>
+                                       <Button 
+                                         variant="outline" 
+                                         size="sm" 
+                                         className="text-xs"
+                                         onClick={() => handleDownloadData('png', message)}
+                                       >
+                                         <Download className="h-3 w-3" />
+                                         PNG
+                                       </Button>
+                                     </div>
                                   </CardContent>
                                 </Card>
                               )}

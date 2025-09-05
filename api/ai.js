@@ -1,5 +1,4 @@
 import express from 'express';
-import fetch from 'node-fetch';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -52,11 +51,19 @@ Now answer the following user question in the same format:
       generationConfig: { temperature: 0.7, maxOutputTokens: 512 },
       safetySettings: []
     };
+    console.log('🤖 Sending request to Gemini API...');
     const geminiRes = await fetch(geminiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(geminiBody)
     });
+    
+    console.log('📊 Gemini API Status:', geminiRes.status);
+    if (!geminiRes.ok) {
+      const errorText = await geminiRes.text();
+      console.error('❌ Gemini API Error:', errorText);
+      throw new Error(`Gemini API returned ${geminiRes.status}: ${errorText}`);
+    }
     const geminiData = await geminiRes.json();
     const content = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || 'No response from Gemini.';
     // Try to parse Gemini's answer for provenance and visualizations, fallback to old mock if not found
@@ -92,7 +99,12 @@ Now answer the following user question in the same format:
     }
     res.json({ content, metadata });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch from Gemini API.' });
+    console.error('🚨 API Error:', err.message);
+    res.status(500).json({ 
+      error: 'Failed to fetch from Gemini API.',
+      details: err.message,
+      hasApiKey: !!apiKey
+    });
   }
 });
 

@@ -2,7 +2,9 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import aiRouter from './ai.js';
-const authRouter = require('./auth.js');
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const authRouter = require('./auth/index.js');
 
 // Load environment variables
 dotenv.config();
@@ -11,7 +13,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:8080', 'https://id-preview--b9383388-0541-4618-bba6-bbff260b05f0.lovable.app'],
+  origin: ['http://localhost:8080', 'https://b9383388-0541-4618-bba6-bbff260b05f0.sandbox.lovable.dev'],
   credentials: true
 }));
 app.use(express.json());
